@@ -37,6 +37,12 @@
 
         html {
             scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
         }
 
         body {
@@ -250,13 +256,14 @@
         }
 
         .floating-numbers {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 1;
+            overflow: hidden;
         }
 
         .float-num {
@@ -1324,14 +1331,14 @@
             text: "When you think about the best part of your job, what wins?",
             options: [
                 { label: "A", text: "When the numbers are exactly right. Chef's kiss.", archetype: "Craft Lover" },
-                { label: "B", text: "When a client actually listens to my advice.", archetype: "Custodian" }
+                { label: "B", text: "When I know my advice actually changed someone's direction.", archetype: "Purpose Seeker" }
             ]
         },
         {
             section: 1,
             text: "If you could design your ideal practice, which sounds better?",
             options: [
-                { label: "A", text: "Runs like a machine - clean, predictable, no surprises.", archetype: "Order Bringer" },
+                { label: "A", text: "A practice that's efficient and profitable. That's what success looks like to me.", archetype: "Pragmatist" },
                 { label: "B", text: "Fewer things, but each one genuinely matters.", archetype: "Purpose Seeker" }
             ]
         },
@@ -1347,40 +1354,40 @@
             section: 1,
             text: "How do you know you had a good month?",
             options: [
-                { label: "A", text: "By how much I got done. Productivity = sanity.", archetype: "Pragmatist" },
-                { label: "B", text: "By whether my clients are actually in good shape.", archetype: "Custodian" }
+                { label: "A", text: "By how smoothly everything ran. No fires, no surprises.", archetype: "Pragmatist" },
+                { label: "B", text: "By whether my clients slept better because of me.", archetype: "Custodian" }
             ]
         },
         {
             section: 1,
             text: "Be honest - why did you choose this profession?",
             options: [
-                { label: "A", text: "It's stable and makes sense. Practical choice.", archetype: "Pragmatist" },
-                { label: "B", text: "Someone has to get the numbers right. Might as well be me.", archetype: "Truth Seeker" }
+                { label: "A", text: "There's something satisfying about a perfectly clean set of books. I never get tired of that feeling.", archetype: "Craft Lover" },
+                { label: "B", text: "I see what the numbers actually mean. Most people can't.", archetype: "Truth Seeker" }
             ]
         },
         {
             section: 1,
             text: "You magically get 20 extra hours a month. What do you do?",
             options: [
-                { label: "A", text: "Take on more clients. Scale up.", archetype: "Pragmatist" },
-                { label: "B", text: "Go deeper with the clients I already have.", archetype: "Custodian" }
+                { label: "A", text: "Take on more clients. I know I can handle it, and growth is the goal.", archetype: "Pragmatist" },
+                { label: "B", text: "Finally have time to do the kind of work that actually matters to me.", archetype: "Purpose Seeker" }
             ]
         },
         {
             section: 1,
             text: "What are you most proud of in your work?",
             options: [
-                { label: "A", text: "How efficiently I run things.", archetype: "Pragmatist" },
-                { label: "B", text: "How much my clients trust me.", archetype: "Custodian" }
+                { label: "A", text: "The quality of my work. I don't cut corners.", archetype: "Craft Lover" },
+                { label: "B", text: "The patterns I've found in the numbers that changed how a client saw their business.", archetype: "Truth Seeker" }
             ]
         },
         {
             section: 1,
             text: "What's the worst feeling in your work?",
             options: [
-                { label: "A", text: "Falling behind. The pile growing faster than I can clear it.", archetype: "Order Bringer" },
-                { label: "B", text: "Knowing I could have caught something but didn't have time to look.", archetype: "Truth Seeker" }
+                { label: "A", text: "When the process breaks down and things start slipping through the cracks.", archetype: "Order Bringer" },
+                { label: "B", text: "Knowing someone is counting on me and I might let them down.", archetype: "Custodian" }
             ]
         },
         {
@@ -1388,7 +1395,7 @@
             text: "What do you want from the tools you use?",
             options: [
                 { label: "A", text: "Help me do more, faster. Speed is everything.", archetype: "Pragmatist" },
-                { label: "B", text: "Handle the stuff that's beneath my expertise so I can do real work.", archetype: "Custodian" }
+                { label: "B", text: "Automate the boring parts so I can spend time on the work that needs a human touch.", archetype: "Craft Lover" }
             ]
         },
         // SECTION 2: Scenario Reactions (10-16)
@@ -1399,7 +1406,7 @@
             text: "Your gut reaction?",
             options: [
                 { label: "A", text: "Frustrated. My time has value and they should acknowledge that.", archetype: "Pragmatist" },
-                { label: "B", text: "Fine, honestly. That's the job. I didn't do it for thanks.", archetype: "Pragmatist" },
+                { label: "B", text: "Honestly? I'm proud of how the books turned out. The work speaks for itself.", archetype: "Craft Lover" },
                 { label: "C", text: "Annoyed - but mostly at myself for not having a system that prevents this.", archetype: "Order Bringer" },
                 { label: "D", text: "A quiet kind of tired. Not angry. Just... unseen.", archetype: "Custodian" }
             ]
@@ -1413,7 +1420,7 @@
                 { label: "A", text: "Fix it. Efficiently. Minimize the damage and move on.", archetype: "Pragmatist" },
                 { label: "B", text: "Document exactly what went wrong. Make it airtight.", archetype: "Order Bringer" },
                 { label: "C", text: "Sit the client down. They need to understand what this means.", archetype: "Truth Seeker" },
-                { label: "D", text: "Feel a sense of weight. This is why I do this. This is what I protect them from.", archetype: "Custodian" }
+                { label: "D", text: "Feel a sense of weight. This is why I do this. This is what the work is really about.", archetype: "Purpose Seeker" }
             ]
         },
         {
@@ -1422,7 +1429,7 @@
             text: "Honestly, what do you think?",
             options: [
                 { label: "A", text: "Good luck with that. I'll believe it when I see it.", archetype: "Pragmatist" },
-                { label: "B", text: "They don't understand what we actually do.", archetype: "Custodian" },
+                { label: "B", text: "They don't understand the craft of what we actually do.", archetype: "Craft Lover" },
                 { label: "C", text: "It might handle the basic stuff. I'm more worried about the judgment calls.", archetype: "Truth Seeker" },
                 { label: "D", text: "It bothers me more than it should. Not because I'm scared - because it reduces what I do to something mechanical.", archetype: "Purpose Seeker" }
             ]
@@ -1433,8 +1440,8 @@
             text: "How does that land?",
             options: [
                 { label: "A", text: "Laugh it off. I don't need their validation.", archetype: "Pragmatist" },
-                { label: "B", text: "Mildly annoying, but I'm used to it by now.", archetype: "Pragmatist" },
-                { label: "C", text: "I usually just change the subject. Not worth explaining.", archetype: "Order Bringer" },
+                { label: "B", text: "Part of me wants to explain why it actually matters. But I don't.", archetype: "Purpose Seeker" },
+                { label: "C", text: "I think about a tricky problem I cracked last week and feel quietly fine about it.", archetype: "Craft Lover" },
                 { label: "D", text: "There's a small sting. Not because I need them impressed - because they have no idea what I actually carry.", archetype: "Custodian" }
             ]
         },
@@ -1442,10 +1449,10 @@
             section: 2,
             text: "Think of your best client relationship. The one you're most proud of. What makes it special?",
             options: [
-                { label: "A", text: "I've helped them save real money and grow their business.", archetype: "Pragmatist" },
+                { label: "A", text: "I've genuinely helped their business grow. That impact matters.", archetype: "Purpose Seeker" },
                 { label: "B", text: "Their books are always clean. The system just works.", archetype: "Order Bringer" },
                 { label: "C", text: "They trust me with everything. I know their business inside and out.", archetype: "Custodian" },
-                { label: "D", text: "I've caught things that would have hurt them. They may not even know about half of them.", archetype: "Custodian" }
+                { label: "D", text: "I see things in their numbers that others miss. I understand their business at a level they don't.", archetype: "Truth Seeker" }
             ]
         },
         {
@@ -1453,20 +1460,20 @@
             scenario: "It's 11pm during busy season. You're reviewing a return and something doesn't look right. It's probably fine. You could file it and circle back later.",
             text: "What do you actually do?",
             options: [
-                { label: "A", text: "Flag it, note it, file it, circle back tomorrow. Efficiency matters.", archetype: "Pragmatist" },
+                { label: "A", text: "Flag it, note it, file it, circle back tomorrow. I have a system for this.", archetype: "Order Bringer" },
                 { label: "B", text: "Stay up. I can't submit something I'm not sure about.", archetype: "Craft Lover" },
                 { label: "C", text: "Stay up. Because if I'm wrong, my client pays the price.", archetype: "Custodian" },
-                { label: "D", text: "Stay up. Not because anyone would know. Because I would know.", archetype: "Truth Seeker" }
+                { label: "D", text: "Stay up. I need to understand what that number is actually telling me.", archetype: "Truth Seeker" }
             ]
         },
         {
             section: 2,
             text: "If you could change one thing about how the world sees accountants, what would it be?",
             options: [
-                { label: "A", text: "That we're a cost center. We create real value.", archetype: "Pragmatist" },
+                { label: "A", text: "That we're a cost center. We build the systems that keep businesses alive.", archetype: "Order Bringer" },
                 { label: "B", text: "That we're just \"numbers people.\" We understand business better than most.", archetype: "Truth Seeker" },
                 { label: "C", text: "That we're interchangeable. The trust I've built took years.", archetype: "Custodian" },
-                { label: "D", text: "That we're boring. We hold the financial truth of every business we touch.", archetype: "Purpose Seeker" }
+                { label: "D", text: "That we're boring. This work shapes whether businesses survive or fail. That should mean something.", archetype: "Purpose Seeker" }
             ]
         },
         // SECTION 3: Open Prompts (17-19)
