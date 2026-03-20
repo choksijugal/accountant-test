@@ -898,6 +898,93 @@
             color: var(--deep-brown);
         }
 
+        /* CTA Section */
+        .cta-section {
+            margin-top: 2.5rem;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(92, 64, 51, 0.08);
+        }
+
+        .cta-section h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            color: var(--deep-brown);
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-section p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-form input[type="email"] {
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            border: 2px solid var(--peach-dark);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--deep-brown);
+            background: var(--cream);
+            outline: none;
+            min-width: 240px;
+            transition: border-color 0.3s ease;
+        }
+
+        .cta-form input[type="email"]:focus {
+            border-color: var(--deep-brown);
+        }
+
+        .cta-form input[type="email"]::placeholder {
+            color: var(--warm-brown);
+            opacity: 0.6;
+        }
+
+        .cta-form button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: var(--deep-brown);
+            color: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        .cta-form button:hover {
+            background: #4A3228;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(92, 64, 51, 0.15);
+        }
+
+        .cta-form button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cta-success {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--deep-brown);
+            font-weight: 500;
+            display: none;
+        }
+
         .share-toast {
             position: fixed;
             bottom: 2rem;
@@ -1230,6 +1317,17 @@
                 </div>
                 <button class="btn-retake" onclick="retakeQuiz()">Take it again</button>
             </div>
+
+            <!-- CTA Email Section -->
+            <div class="cta-section">
+                <h3>Liked the quiz? 🎯</h3>
+                <p>We're building something special for accountants and would love to learn more about you.</p>
+                <div class="cta-form" id="ctaForm">
+                    <input type="email" id="ctaEmail" placeholder="Enter your email" required />
+                    <button onclick="submitCtaEmail()">I'm in!</button>
+                </div>
+                <div class="cta-success" id="ctaSuccess">✨ Thanks! We'll be in touch soon.</div>
+            </div>
         </div>
     </div>
 
@@ -1533,6 +1631,45 @@
         currentQuestion = 0;
         answers = {};
         showScreen('landing');
+    }
+
+    // ============ CTA EMAIL ============
+    function submitCtaEmail() {
+        const emailInput = document.getElementById('ctaEmail');
+        const email = emailInput.value.trim();
+        if (!email || !email.includes('@')) {
+            emailInput.style.borderColor = '#e74c3c';
+            setTimeout(() => emailInput.style.borderColor = '', 1500);
+            return;
+        }
+        const btn = document.querySelector('.cta-form button');
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        // Log email to Google Sheet
+        if (SHEET_WEBHOOK_URL) {
+            fetch(SHEET_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    sessionId: sessionId,
+                    timestamp: new Date().toISOString(),
+                    ip: geoData.ip,
+                    country: geoData.country,
+                    city: geoData.city,
+                    userAgent: navigator.userAgent,
+                    questionIndex: 'cta_email',
+                    questionText: 'CTA Email Signup',
+                    selectedOption: email,
+                    archetype: '',
+                    finalResult: '',
+                    completionStatus: 'email_signup',
+                    scoreBreakdown: ''
+                })
+            }).catch(() => {});
+        }
+        document.getElementById('ctaForm').style.display = 'none';
+        document.getElementById('ctaSuccess').style.display = 'block';
     }
 
     // ============ RENDER QUESTION ============
