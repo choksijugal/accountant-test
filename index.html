@@ -1029,6 +1029,117 @@
             position: relative;
         }
 
+        /* Aggregate Results */
+        .aggregate-section {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .aggregate-toggle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--warm-brown);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.2s ease;
+        }
+
+        .aggregate-toggle span {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .aggregate-toggle:hover {
+            color: var(--deep-brown);
+        }
+
+        .aggregate-chart {
+            margin-top: 1.25rem;
+            padding: 1.75rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(92, 64, 51, 0.08);
+        }
+
+        .aggregate-chart h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            color: var(--deep-brown);
+            margin-bottom: 0.25rem;
+        }
+
+        .aggregate-subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+        }
+
+        .histogram {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .histo-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .histo-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            color: var(--deep-brown);
+            min-width: 95px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .histo-bar-wrap {
+            flex: 1;
+            height: 28px;
+            background: var(--cream);
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .histo-bar {
+            height: 100%;
+            border-radius: 14px;
+            transition: width 1s ease-out;
+            min-width: 0;
+        }
+
+        .histo-bar.is-you {
+            box-shadow: 0 0 0 2px var(--deep-brown);
+        }
+
+        .histo-pct {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--deep-brown);
+            white-space: nowrap;
+            min-width: 32px;
+            text-align: left;
+        }
+
+        .histo-you-badge {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--deep-brown);
+            background: rgba(92, 64, 51, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+
         .share-toast {
             position: fixed;
             bottom: 2rem;
@@ -1371,6 +1482,18 @@
                     <button onclick="submitCtaEmail()">I'm in!</button>
                 </div>
                 <div class="cta-success" id="ctaSuccess">✨ Thanks! We'll be in touch soon.</div>
+            </div>
+
+            <!-- Aggregate Results Section -->
+            <div class="aggregate-section" id="aggregateSection" style="display: none;">
+                <a href="#" class="aggregate-toggle" id="aggregateToggle" onclick="toggleAggregate(event)">
+                    📊 Curious to see what others got? <span>See aggregate results here</span>
+                </a>
+                <div class="aggregate-chart" id="aggregateChart" style="display: none;">
+                    <h3>What Everyone Got</h3>
+                    <p class="aggregate-subtitle" id="aggregateCount"></p>
+                    <div class="histogram" id="histogram"></div>
+                </div>
             </div>
         </div>
 
@@ -1722,6 +1845,95 @@
         document.getElementById('ctaSuccess').style.display = 'block';
     }
 
+    // ============ AGGREGATE RESULTS ============
+    const SEED_COUNTS = {
+        "The Guardian": 152,
+        "The Decoder": 361,
+        "The Architect": 294,
+        "The Engine": 475,
+        "The Compass": 52,
+        "The Artisan": 61
+    };
+
+    const archetypeColors = {
+        "The Guardian": "#7BA87C",
+        "The Decoder": "#5B8AA0",
+        "The Architect": "#C4956A",
+        "The Engine": "#D4A853",
+        "The Compass": "#9B7BB5",
+        "The Artisan": "#C47A7A"
+    };
+
+    function getAggregateCounts() {
+        const stored = localStorage.getItem('quizAggregateCounts');
+        if (stored) return JSON.parse(stored);
+        // First visit — seed with starting balances
+        localStorage.setItem('quizAggregateCounts', JSON.stringify(SEED_COUNTS));
+        return { ...SEED_COUNTS };
+    }
+
+    function incrementCount(archetypeName) {
+        const counts = getAggregateCounts();
+        counts[archetypeName] = (counts[archetypeName] || 0) + 1;
+        localStorage.setItem('quizAggregateCounts', JSON.stringify(counts));
+    }
+
+    function toggleAggregate(e) {
+        e.preventDefault();
+        const chart = document.getElementById('aggregateChart');
+        const toggle = document.getElementById('aggregateToggle');
+        if (chart.style.display === 'none') {
+            chart.style.display = 'block';
+            toggle.querySelector('span').textContent = 'Hide aggregate results';
+            renderHistogram();
+        } else {
+            chart.style.display = 'none';
+            toggle.querySelector('span').textContent = 'See aggregate results here';
+        }
+    }
+
+    function renderHistogram() {
+        const counts = getAggregateCounts();
+        const histogram = document.getElementById('histogram');
+        const countEl = document.getElementById('aggregateCount');
+        const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
+        countEl.textContent = `${total.toLocaleString()} accountants have taken the quiz`;
+
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        const maxCount = sorted[0][1];
+        const userArchetype = window.quizResult?.data?.name;
+
+        histogram.innerHTML = sorted.map(([name, count]) => {
+            const pct = Math.round((count / total) * 100);
+            const barWidth = Math.max(8, (count / maxCount) * 100);
+            const color = archetypeColors[name] || '#C4956A';
+            const isYou = name === userArchetype;
+            return `
+                <div class="histo-row">
+                    <div class="histo-label">${name}</div>
+                    <div class="histo-bar-wrap">
+                        <div class="histo-bar ${isYou ? 'is-you' : ''}" style="width: 0%; background: ${color}${isYou ? '' : '88'};">
+                        </div>
+                    </div>
+                    <div class="histo-pct">${pct}%</div>
+                    ${isYou ? '<div class="histo-you-badge">← You</div>' : ''}
+                </div>
+            `;
+        }).join('');
+
+        // Animate bars in
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                const bars = histogram.querySelectorAll('.histo-bar');
+                sorted.forEach(([name, count], i) => {
+                    const bw = Math.max(8, (count / maxCount) * 100);
+                    if (bars[i]) bars[i].style.width = bw + '%';
+                });
+            }, 50);
+        });
+    }
+
     // ============ RENDER QUESTION ============
     function renderQuestion(index) {
         const area = document.getElementById('questionArea');
@@ -1966,9 +2178,15 @@
         // Store result for sharing
         window.quizResult = { archetype, data, scores };
 
-        // Reset CTA state
+        // Increment aggregate count
+        incrementCount(data.name);
+
+        // Reset CTA + aggregate state
         document.getElementById('ctaForm').style.display = 'flex';
         document.getElementById('ctaSuccess').style.display = 'none';
+        document.getElementById('aggregateSection').style.display = 'block';
+        document.getElementById('aggregateChart').style.display = 'none';
+        document.getElementById('aggregateToggle').querySelector('span').textContent = 'See aggregate results here';
         const hint = document.getElementById('scrollHint');
         if (hint) hint.style.display = '';
 
