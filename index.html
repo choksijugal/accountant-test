@@ -1171,7 +1171,7 @@
             <div class="progress-bar-container">
                 <div class="progress-info">
                     <span class="progress-section" id="sectionLabel">Part 1 of 3</span>
-                    <span class="progress-count" id="progressCount">1 / 8</span>
+                    <span class="progress-count" id="progressCount">1 / 10</span>
                 </div>
                 <div class="progress-track">
                     <div class="progress-fill" id="progressFill" style="width: 5%"></div>
@@ -1317,13 +1317,21 @@
 
     // ============ DATA ============
     const questions = [
-        // SECTION 1: Forced Choice
+        // SECTION 1: Forced Choices
         {
             section: 1,
             text: "What frustrates you more?",
             options: [
                 { label: "A", text: "When things are disorganized. Pure chaos.", archetype: "Order Bringer" },
                 { label: "B", text: "When I know something important but don't have time to act on it.", archetype: "Truth Seeker" }
+            ]
+        },
+        {
+            section: 1,
+            text: "What do you want from the tools you use?",
+            options: [
+                { label: "A", text: "Help me do more, faster. Speed is everything.", archetype: "Pragmatist" },
+                { label: "B", text: "Automate the boring parts so I can spend time on the work that needs a human touch.", archetype: "Craft Lover" }
             ]
         },
         // SECTION 2: Scenario Reactions
@@ -1359,6 +1367,16 @@
                 { label: "B", text: "Part of me wants to explain why it actually matters. But I don't.", archetype: "Purpose Seeker" },
                 { label: "C", text: "I think about a tricky problem I cracked last week and feel quietly fine about it.", archetype: "Craft Lover" },
                 { label: "D", text: "There's a small sting. Not because I need them impressed - because they have no idea what I actually carry.", archetype: "Custodian" }
+            ]
+        },
+        {
+            section: 2,
+            text: "Think of your best client relationship. The one you're most proud of. What makes it special?",
+            options: [
+                { label: "A", text: "I've genuinely helped their business grow. That impact matters.", archetype: "Purpose Seeker" },
+                { label: "B", text: "Their books are always clean. The system just works.", archetype: "Order Bringer" },
+                { label: "C", text: "They trust me with everything. I know their business inside and out.", archetype: "Custodian" },
+                { label: "D", text: "I see things in their numbers that others miss. I understand their business at a level they don't.", archetype: "Truth Seeker" }
             ]
         },
         {
